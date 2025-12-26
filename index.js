@@ -771,8 +771,7 @@ const init = async () => {
         // Run migrations
         await createShareLogsTable();
         await ensureSharePointsColumn();
-
-        // await recalculateSharePoints(); // Disabled to prevent startup delays
+        await recalculateSharePoints();
 
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
