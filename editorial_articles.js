@@ -1,4 +1,6 @@
-const updatedAt = '2026-06-23';
+const { ARTICLE_ENHANCEMENTS_BY_ORDER } = require('./articleEnhancements.cjs');
+
+const updatedAt = '2026-06-28';
 
 const articlesData = [
     {
@@ -407,7 +409,26 @@ const articlesData = [
         ]),
         sort_order: 29
     }
-].map((article) => ({ ...article, updated_at: updatedAt }));
+].map((article) => {
+    let fullContent = [];
+
+    try {
+        fullContent = JSON.parse(article.full_content);
+    } catch (error) {
+        fullContent = [article.description];
+    }
+
+    const enhancedContent = [
+        ...fullContent,
+        ...(ARTICLE_ENHANCEMENTS_BY_ORDER[article.sort_order] || [])
+    ];
+
+    return {
+        ...article,
+        full_content: JSON.stringify(enhancedContent),
+        updated_at: updatedAt
+    };
+});
 
 const trendingTopicsData = [
     { title: 'Risk management', trend: '+12.4%', sort_order: 1 },
