@@ -52,7 +52,7 @@ const createArticlesAndTrendingTables = async () => {
             if (existing.length > 0) {
                 await db.query(
                     `UPDATE articles
-                     SET title = ?, source = ?, category = ?, description = ?, full_content = ?, sort_order = ?, is_active = 1
+                     SET title = ?, source = ?, category = ?, description = ?, full_content = ?, sort_order = ?, created_at = ?, updated_at = ?, is_active = 1
                      WHERE id = ?`,
                     [
                         article.title,
@@ -61,19 +61,23 @@ const createArticlesAndTrendingTables = async () => {
                         article.description,
                         article.full_content,
                         article.sort_order,
+                        article.created_at,
+                        article.updated_at,
                         existing[0].id
                     ]
                 );
             } else {
                 await db.query(
-                    'INSERT INTO articles (title, source, category, description, full_content, sort_order) VALUES (?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO articles (title, source, category, description, full_content, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                     [
                         article.title,
                         article.source,
                         article.category,
                         article.description,
                         article.full_content,
-                        article.sort_order
+                        article.sort_order,
+                        article.created_at,
+                        article.updated_at
                     ]
                 );
             }

@@ -1,6 +1,37 @@
 const { ARTICLE_ENHANCEMENTS_BY_ORDER } = require('./articleEnhancements.cjs');
 
 const updatedAt = '2026-06-28';
+const publishedAtBySortOrder = {
+    1: '2026-06-23',
+    2: '2026-06-23',
+    3: '2026-06-23',
+    4: '2026-06-23',
+    5: '2026-06-23',
+    6: '2026-06-23',
+    7: '2026-06-23',
+    8: '2026-06-23',
+    9: '2026-06-23',
+    10: '2026-06-23',
+    11: '2026-06-27',
+    12: '2026-06-27',
+    13: '2026-06-27',
+    14: '2026-06-27',
+    15: '2026-06-28',
+    16: '2026-06-28',
+    17: '2026-06-28',
+    18: '2026-06-28',
+    19: '2026-06-28',
+    20: '2026-06-28',
+    21: '2026-06-28',
+    22: '2026-06-28',
+    23: '2026-06-28',
+    24: '2026-06-28',
+    25: '2026-06-28',
+    26: '2026-06-28',
+    27: '2026-06-28',
+    28: '2026-06-28',
+    29: '2026-06-28'
+};
 
 const articlesData = [
     {
@@ -426,6 +457,7 @@ const articlesData = [
     return {
         ...article,
         full_content: JSON.stringify(enhancedContent),
+        created_at: publishedAtBySortOrder[article.sort_order] || updatedAt,
         updated_at: updatedAt
     };
 });

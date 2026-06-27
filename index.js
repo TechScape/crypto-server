@@ -873,7 +873,7 @@ app.get('/api/coins/details', async (req, res) => {
 app.get('/api/articles', async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT id, title, source, category, description, full_content, sort_order, created_at, updated_at FROM articles WHERE is_active = 1 ORDER BY sort_order ASC, created_at DESC'
+            'SELECT id, title, source, category, description, full_content, sort_order, created_at, updated_at FROM articles WHERE is_active = 1 ORDER BY created_at DESC, sort_order ASC, updated_at DESC'
         );
         const articles = rows.map(row => ({
             ...row,
