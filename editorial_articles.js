@@ -66,12 +66,14 @@ const articlesData = [
         title: 'No-KYC Crypto Exchanges: Privacy Benefits, Practical Risks, and Safer Habits',
         source: 'CryptoCardiac Editorial',
         category: 'Exchanges',
-        description: 'A neutral guide to No-KYC crypto exchanges, including why people use them, what risks to watch for, and how to think about privacy responsibly.',
+        description: 'A neutral guide to No-KYC crypto exchanges, including privacy tradeoffs, legal responsibilities, platform risks, and safer research habits.',
         full_content: JSON.stringify([
             'No-KYC exchanges attract users who care about privacy, fast onboarding, and fewer identity documents stored by third parties.',
+            'Privacy is not the same as avoiding law. CryptoCardiac does not encourage users to bypass identity rules, sanctions controls, anti-money-laundering requirements, tax reporting, or any other legal obligation.',
             'The privacy benefit does not remove practical risks. Some platforms have limited support, low liquidity, unclear operating history, or changing withdrawal limits.',
-            'Users remain responsible for understanding laws, taxes, sanctions restrictions, and local reporting duties. No-KYC does not mean no rules.',
+            'Users remain responsible for understanding laws, taxes, sanctions restrictions, local licensing requirements, and whether a platform is allowed to serve them. No-KYC does not mean no rules.',
             'Safer habits include strong passwords, hardware wallets for long-term storage, withdrawal address checks, and small test transactions.',
+            'A responsible privacy approach focuses on reducing unnecessary data exposure while keeping records, respecting local requirements, and avoiding prohibited activity.',
             'CryptoCardiac does not recommend a specific exchange. The goal is to help readers evaluate tradeoffs before trusting any platform with funds.'
         ]),
         sort_order: 3
