@@ -873,7 +873,7 @@ app.get('/api/coins/details', async (req, res) => {
 app.get('/api/articles', async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT id, title, source, category, description, full_content, created_at, updated_at FROM articles WHERE is_active = 1 ORDER BY created_at DESC'
+            'SELECT id, title, source, category, description, full_content, sort_order, created_at, updated_at FROM articles WHERE is_active = 1 ORDER BY sort_order ASC, created_at DESC'
         );
         const articles = rows.map(row => ({
             ...row,
@@ -890,7 +890,7 @@ app.get('/api/articles', async (req, res) => {
 app.get('/api/articles/:id', async (req, res) => {
     try {
         const [rows] = await db.query(
-            'SELECT id, title, source, category, description, full_content, created_at, updated_at FROM articles WHERE id = ? AND is_active = 1',
+            'SELECT id, title, source, category, description, full_content, sort_order, created_at, updated_at FROM articles WHERE id = ? AND is_active = 1',
             [req.params.id]
         );
         if (rows.length === 0) return res.status(404).json({ error: 'Article not found' });
@@ -1021,8 +1021,50 @@ app.delete('/api/trending-topics/:id', authenticateSuperAdmin, async (req, res) 
     }
 });
 
+// Public community stats only. Internal account, visitor, and API metrics stay private.
+app.get('/api/public/stats', async (req, res) => {
+    try {
+        const todayEST = getTodayDateEST();
+
+        const [voteRows] = await db.query('SELECT COUNT(*) as count FROM votes');
+        const totalVotes = voteRows[0].count;
+
+        const [topCoinRows] = await db.query('SELECT coin_name, COUNT(*) as count FROM votes GROUP BY coin_name ORDER BY count DESC LIMIT 1');
+        const topCoinAllTime = topCoinRows.length > 0 ? topCoinRows[0] : null;
+
+        const [topCoin24hRows] = await db.query(`
+            SELECT coin_name, COUNT(*) as count
+            FROM votes
+            WHERE created_at >= NOW() - INTERVAL 1 DAY
+            GROUP BY coin_name
+            ORDER BY count DESC
+            LIMIT 1
+        `);
+        const topCoin24h = topCoin24hRows.length > 0 ? topCoin24hRows[0] : null;
+
+        const [votesTodayRows] = await db.query(`
+            SELECT COUNT(*) as count
+            FROM (
+                SELECT id FROM votes WHERE DATE(CONVERT_TZ(created_at, '+00:00', '-05:00')) = ?
+                UNION ALL
+                SELECT id FROM share_logs WHERE DATE(CONVERT_TZ(created_at, '+00:00', '-05:00')) = ?
+            ) as combined
+        `, [todayEST, todayEST]);
+
+        res.json({
+            totalVotes,
+            topCoinAllTime,
+            topCoin24h,
+            votesToday: votesTodayRows[0].count
+        });
+    } catch (error) {
+        console.error('Public stats error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // --- Admin Stats Route ---
-app.get('/api/admin/stats', async (req, res) => {
+app.get('/api/admin/stats', authenticateSuperAdmin, async (req, res) => {
     try {
         const todayEST = getTodayDateEST();
 
